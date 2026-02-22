@@ -1,0 +1,11 @@
+networks:
+  default:
+
+services:
+  the-room:
+    container_name: the-room
+    build: .
+    ports:
+      - 8080:8080
+    networks:
+      - default
