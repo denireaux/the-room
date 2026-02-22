@@ -2,9 +2,8 @@ services:
   the-room:
     container_name: the-room
     build: .
-    ports:
-      - "8080:8080"
     environment:
+      CHAT_KEY: "CHANGE_ME_TO_A_LONG_RANDOM_SECRET"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/the_room
       SPRING_DATASOURCE_USERNAME: the_room
       SPRING_DATASOURCE_PASSWORD: change_me
@@ -32,8 +31,25 @@ services:
     networks:
       - default
 
+  caddy:
+    image: caddy:2-alpine
+    container_name: the-room-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - the-room
+    networks:
+      - default
+
 volumes:
   the-room-pgdata:
+  caddy_data:
+  caddy_config:
 
 networks:
   default:

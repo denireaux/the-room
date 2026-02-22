@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+chat:
+  key: "${CHAT_KEY:CHANGE_ME_TO_A_LONG_RANDOM_SECRET}"
+  history:
+    max: 50
+
+spring:
+  datasource:
+    # NOTE: Docker-Compose env vars will override this
+    url: jdbc:postgresql://localhost:5432/the_room
+    username: the_room
+    password: change_me
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
