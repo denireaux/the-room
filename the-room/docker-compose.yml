@@ -1,11 +1,39 @@
-networks:
-  default:
-
 services:
   the-room:
     container_name: the-room
     build: .
     ports:
-      - 8080:8080
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/the_room
+      SPRING_DATASOURCE_USERNAME: the_room
+      SPRING_DATASOURCE_PASSWORD: change_me
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_OPEN_IN_VIEW: "false"
+    depends_on:
+      - postgres
     networks:
       - default
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: the-room-postgres
+    environment:
+      POSTGRES_DB: the_room
+      POSTGRES_USER: the_room
+      POSTGRES_PASSWORD: change_me
+    volumes:
+      - the-room-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U the_room -d the_room"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - default
+
+volumes:
+  the-room-pgdata:
+
+networks:
+  default:
